@@ -42,6 +42,23 @@ app.post('/collection/:collectionName', (req, res, next) => {
     })
 });
 
+app.delete('collection/:collectionName/:id', (req, res, next) => {
+    req.collection.deleteOne(
+        {_id: ObjectID(req.params.id)},
+        (e, result) => {
+            if (e) return next (e)
+            res.send((result.result.n === 1) ? {msg: 'success'} : {msg: 'error'})
+        }
+    )
+});
+
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+
+    res.header("Access-Control-Allow-Headers", "*");
+    next();
+});
+
 app.listen(port, ()=> {
     console.log('Running successfully on 3000')
 });
