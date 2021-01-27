@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
-
 const MongoClient = require('mongodb').MongoClient;
+const port =process.env.PORT || 3000
 
 let db;
 
@@ -27,6 +27,6 @@ app.get('/collection/:collectionName', (req, res, next) => {
     })
 })
 
-app.listen(3000, ()=> {
+app.listen(port, ()=> {
     console.log('Running successfully on 3000')
 });
