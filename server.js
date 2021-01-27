@@ -11,6 +11,14 @@ MongoClient.connect('mongodb+srv://dbAdmin:password2468@coursework2.0xwya.mongod
 
 app.use(express.json());
 
+app.use(function(req, res, next) {
+    // Allow different IP Addresses
+    res.header("Access-Control-Allow-Origin", "*");
+    // Allow different header fields
+    res.header("Access-Control-Allow-Headers", "*");
+    next();
+});
+
 app.param('collectionName', (req, res, next, collectionName) => {
     req.collection = db.collection(collectionName)
     return next()
@@ -50,13 +58,6 @@ app.delete('collection/:collectionName/:id', (req, res, next) => {
             res.send((result.result.n === 1) ? {msg: 'success'} : {msg: 'error'})
         }
     )
-});
-
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-
-    res.header("Access-Control-Allow-Headers", "*");
-    next();
 });
 
 app.listen(port, ()=> {
