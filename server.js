@@ -48,7 +48,6 @@ app.param('collectionName', (req, res, next, collectionName) => {
 // Root path message
 app.get('/', (req, res, next) => {
     res.send('To select a collection type the name in the URL, example: /collection/products')
-    console.log("Hi there", __dirname)
 });
 
 // GET all objects from a collection
@@ -97,7 +96,8 @@ app.put('/collection/:collectionName/:id', (req, res, next) => {
 });
 
 // DELETE an object from a database collection
-app.delete('collection/:collectionName/:id', (req, res, next) => {
+app.delete('/collection/:collectionName/:id', (req, res, next) => {
+    console.log('IM RUNNING')
     req.collection.deleteOne(
         {_id: ObjectID(req.params.id)},
         (e, result) => {
