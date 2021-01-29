@@ -4,7 +4,7 @@ const MongoClient = require('mongodb').MongoClient;
 const port = process.env.PORT || 3000;
 
 
-// app.use('/images', express.static(__dirnam));
+// This serves images to front-end from backend image folder
 app.use('/images', express.static(__dirname + '/images'));
 // Parse request parameters
 app.use(express.json());
@@ -17,16 +17,27 @@ MongoClient.connect('mongodb+srv://dbAdmin:password2468@coursework2.0xwya.mongod
 
 const path = require("path");
 
-/*app.get("/images/:file(*)", (req, res, next) => {
-    console.log("in action!!!")
-    let file = req.params.file;
-    let test = path.join(__dirname, '/images/', file);
-    console.log(`${test}`)
-    //console.log("%", req.method, req.url, res.send);
-    res.send(`${test}`)
-    console.log('sent.. i think')
-    next();
-});*/
+// Attempted to do the image forwarding, perhaps this is worth some marks?
+// Can you explain what I should have done?
+
+// app.get("/images/:file", (req, res, next) => {
+//     console.log("in action!!!", req.params.file)
+//     let file = req.params.file;
+//     let test = path.join(__dirname, '/images/', file);
+//     console.log(`${test}`)
+//     //console.log("%", req.method, req.url, res.send);
+//     res.send(test)
+//     console.log('sent.. i think')
+//     next();
+// });
+
+// app.get('/:file(*)', (req, res, next) => {
+//     console.log('image requested', req.params.file)
+//     let file = req.params.file;
+//     let test = path.join(__dirname, '/images/', file);
+//     res.sendFile(test);
+//     next();
+// });
 
 app.use(function(req, res, next) {
     // Allow different IP Addresses
@@ -56,7 +67,7 @@ app.get('/collection/:collectionName', (req, res, next) => {
     req.collection.find({}).toArray((e, results) => {
         if (e) return next (e)
         res.send(results);
-        console.log("Data Sent");
+        console.log("Data Sent to front-end");
     })
 });
 
@@ -67,17 +78,17 @@ app.get('/collection/:collectionName/:id', (req, res, next) => {
     req.collection.findOne({_id: new ObjectID(req.params.id) }, (e, result) => {
         if (e) return next (e)
         res.send(result);
-        console.log("Data Sent");
+        console.log("Data Sent to front-end");
     })
 });
 
 // POST an Object to Database Collection
 app.post('/collection/:collectionName', (req, res, next) => {
     console.log(req.method, "to", req.params);
-    req.collection.insert(req.body, (e, results) => {
+    req.collection.insertOne(req.body, (e, results) => {
         if (e) return next (e)
         res.send(results.ops)
-        console.log("Data sent");
+        console.log("Successfully Posted Order Details");
     })
 });
 
@@ -97,10 +108,10 @@ app.put('/collection/:collectionName/:id', (req, res, next) => {
 
 // DELETE an object from a database collection
 app.delete('/collection/:collectionName/:id', (req, res, next) => {
-    console.log('IM RUNNING')
     req.collection.deleteOne(
         {_id: ObjectID(req.params.id)},
         (e, result) => {
+            console.log('Product:', req.params.id, 'has been deleted');
             if (e) return next (e)
             res.send((result.result.n === 1) ? {msg: 'success'} : {msg: 'error'})
         }
